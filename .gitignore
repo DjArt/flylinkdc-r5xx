@@ -78,9 +78,11 @@ vc17
 *.log
 *.lib
 *.pdb
-
+*.db-shm
+*.db-wal
 .suo
 merge-vendors.bat
+
 /lua/ARM64/Debug
 /lua/ARM64/Debug
 /ARM64/Debug
