@@ -237,7 +237,7 @@ class CFlyServerConfig
 		static void loadTorrentSearchEngine();
 		static string g_lua_source_search_engine;
 		static bool torrentGetTop(HWND p_wnd, int p_message);
-		static bool torrentSearch(HWND p_wnd, int p_message, const tstring p_search);
+		static bool torrentSearch(HWND p_wnd, int p_message, const tstring& p_search);
 	private:
 		static bool torrentSearchParser(HWND p_wnd, int p_message, string p_search_url,
 			int p_index, sel::State& p_lua_parser, string p_local_agent, string p_error_base,
@@ -321,6 +321,8 @@ class CFlyServerConfig
 		
 		static std::unordered_set<std::string> g_block_hubs;
 		static std::vector<std::string> g_block_hubs_mask;
+		static std::vector<std::string> g_promo_hubs[2];
+		static std::unordered_set<std::string> g_detect_search_bot;
 		static string g_regex_find_ip;
 		static string g_faq_search_does_not_work;
 #ifdef FLYLINKDC_USE_XXX_BLOCK

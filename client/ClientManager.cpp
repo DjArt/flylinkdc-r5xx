@@ -859,7 +859,7 @@ void ClientManager::userCommandL(const HintedUser& hintedUser, const UserCommand
 			return;
 			
 		auto& l_ñlient = ou->getClient();
-		const string& opChat = l_ñlient.getOpChat();
+		const string opChat = l_ñlient.getOpChat();
 		if (opChat.find('*') == string::npos && opChat.find('?') == string::npos)
 		{
 			params["opchat"] = opChat;
@@ -1646,7 +1646,19 @@ void ClientManager::reportUser(const HintedUser& user)
 	}
 }
 
-StringList ClientManager::getUserByIp(const string &p_ip) // TODO - boost
+#ifndef IRAINMAN_IDENTITY_IS_NON_COPYABLE
+Identity ClientManager::getIdentity(const UserPtr& user)
+{
+	CFlyReadLock(*g_csOnlineUsers);
+	const OnlineUser* ou = getOnlineUserL(user);
+	if (ou)
+		return  ou->getIdentity(); // https://www.box.net/shared/1w3v80olr2oro7s1gqt4
+	else
+		return Identity();
+}
+#endif
+
+StringList ClientManager::getUsersByIp(const string &p_ip) // TODO - boost
 {
 	StringList l_result;
 	l_result.reserve(1);
@@ -1654,7 +1666,7 @@ StringList ClientManager::getUserByIp(const string &p_ip) // TODO - boost
 	CFlyReadLock(*g_csOnlineUsers);
 	for (auto i = g_onlineUsers.cbegin(); i != g_onlineUsers.cend(); ++i)
 	{
-		if (i->second->getIdentity().getIpAsString() == p_ip && i->second->getUser()) // TODO - boost
+		if (i->second->getUser() && i->second->getUser()->getLastIPfromRAM().to_string() == p_ip) // TODO - boost
 		{
 			const auto l_nick = i->second->getUser()->getLastNick();
 			const auto l_res = l_fix_dup.insert(l_nick);
